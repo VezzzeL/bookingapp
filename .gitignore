@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-browslkv\api\.env
+browslkv/api/.env
 
 # Editor directories and files
 .vscode/*
