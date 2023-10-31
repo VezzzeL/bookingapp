@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 export const PlacesPage = () => {
   const { action } = useParams();
+  const [title, setTitle] = useState("");
+  const [address, setAddress] = useState("");
+  const [addedPhotos, setAddedPhotos] = useState([]);
+  const [photoLink, setPhotoLink] = useState("");
+  const [description, setDescription] = useState("");
+  const [perks, setPerks] = useState("");
+  const [extraInfo, setExtraInfo] = useState("");
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [maxGuest, setMaxGuest] = useState(1);
   return (
     <div>
       {action !== "new" && (
@@ -169,6 +179,25 @@ export const PlacesPage = () => {
             <h2 className="text-2xl mt-4">Extra info</h2>
             <p className="text-gray-500 text-sm">rules, etc</p>
             <textarea />
+            <h2 className="text-2xl mt-4">Check in/out time</h2>
+            <p className="text-gray-500 text-sm">
+              add check in and check out time
+            </p>
+            <div className="grid gap-2 sm:grid-cols-3">
+              <div className="mt-2 -mb-1">
+                <h3>Check in time</h3>
+                <input type="text" placeholder="16:00" />
+              </div>
+              <div className="mt-2 -mb-1">
+                <h3>Check out time</h3>
+                <input type="text" />
+              </div>
+              <div className="mt-2 -mb-1">
+                <h3>Max guests</h3>
+                <input type="text" />
+              </div>
+            </div>
+            <button className="primary my-4">Save</button>
           </form>
         </div>
       )}
