@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { Perks } from "../Perks";
+import axios from "axios";
 
 export const PlacesPage = () => {
   const { action } = useParams();
@@ -13,6 +15,30 @@ export const PlacesPage = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [maxGuest, setMaxGuest] = useState(1);
+  function inputHeader(text) {
+    return <h2 className="text-2xl mt-4">{text}</h2>;
+  }
+  function inputDescription(text) {
+    return <p className="text-gray-500 text-sm">{text}</p>;
+  }
+  function preInput(header, description) {
+    return (
+      <>
+        {inputHeader(header)}
+        {inputDescription(description)}
+      </>
+    );
+  }
+  async function addPhotoByLink(ev) {
+    ev.preventDefault();
+    const { data: filename } = await axios.post("/upload-by-link", {
+      link: photoLink,
+    });
+    setAddedPhotos((prev) => {
+      return [...prev, filename];
+    });
+    setPhotoLink("");
+  }
   return (
     <div>
       {action !== "new" && (
@@ -42,21 +68,46 @@ export const PlacesPage = () => {
       {action === "new" && (
         <div>
           <form>
-            <h2 className="text-2xl mt-4">Title</h2>
-            <p className="text-gray-500 text-sm">Title for service</p>
-            <input type="text" placeholder="title" />
-            <h2 className="text-2xl mt-4">Address</h2>
-            <p className="text-gray-500 text-sm">Where</p>
-            <input type="text" placeholder="address" />
-            <h2 className="text-2xl mt-4">Photos</h2>
-            <p className="text-gray-500 text-sm">More = better</p>
+            {preInput("Title", "Title for service")}
+            <input
+              type="text"
+              value={title}
+              onChange={(ev) => setTitle(ev.target.value)}
+              placeholder="title"
+            />
+            {preInput("Address", "Where")}
+            <input
+              type="text"
+              value={address}
+              onChange={(ev) => setAddress(ev.target.value)}
+              placeholder="address"
+            />
+            {preInput("Photos", "More = better")}
             <div className="flex gap-2">
-              <input type="text" placeholder={"add using link ....jpg"} />
-              <button className="bg-gray-200 px-4 rounded-2xl">
+              <input
+                type="text"
+                value={photoLink}
+                onChange={(ev) => setPhotoLink(ev.target.value)}
+                placeholder={"add using link ....jpg"}
+              />
+              <button
+                onClick={addPhotoByLink}
+                className="bg-gray-200 px-4 rounded-2xl"
+              >
                 Add&nbsp;photo
               </button>
             </div>
-            <div className="mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            <div className="mt-2 grid gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+              {addedPhotos.length > 0 &&
+                addedPhotos.map((link) => (
+                  <div>
+                    <img
+                      className="rounded-2xl"
+                      src={"http://localhost:4000/uploads/" + link}
+                      alt=""
+                    />
+                  </div>
+                ))}
               <button className="flex gap-1 justify-center border bg-transparent rounded-2xl p-8 text-2xl text-gray-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -75,126 +126,46 @@ export const PlacesPage = () => {
                 Upload
               </button>
             </div>
-            <h2 className="text-2xl mt-4">Description</h2>
-            <p className="text-gray-500 text-sm">Describe</p>
-            <textarea />
-            <h2 className="text-2xl mt-4">Perks</h2>
-            <p className="text-gray-500 text-sm">Add your perks</p>
-            <div className="grid mt-2 gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-              <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                <input type="checkbox" />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"
-                  />
-                </svg>
-
-                <span>Wifi</span>
-              </label>
-              <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                <input type="checkbox" />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"
-                  />
-                </svg>
-
-                <span>Parking Spot</span>
-              </label>
-              <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                <input type="checkbox" />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z"
-                  />
-                </svg>
-
-                <span>TV</span>
-              </label>
-              <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                <input type="checkbox" />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                  />
-                </svg>
-
-                <span>Pets</span>
-              </label>
-              <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                <input type="checkbox" />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M2.25 6L9 12.75l4.286-4.286a11.948 11.948 0 014.306 6.43l.776 2.898m0 0l3.182-5.511m-3.182 5.51l-5.511-3.181"
-                  />
-                </svg>
-                <span>Private entrance</span>
-              </label>
-            </div>
-            <h2 className="text-2xl mt-4">Extra info</h2>
-            <p className="text-gray-500 text-sm">rules, etc</p>
-            <textarea />
-            <h2 className="text-2xl mt-4">Check in/out time</h2>
-            <p className="text-gray-500 text-sm">
-              add check in and check out time
-            </p>
+            {preInput("Description", "Describe")}
+            <textarea
+              value={description}
+              onChange={(ev) => setDescription(ev.target.value)}
+            />
+            {preInput("Perks", "Add your perks")}
+            <Perks selected={perks} onChange={setPerks} />
+            {preInput("Extra info", "rules, etc")}
+            <textarea
+              value={extraInfo}
+              onChange={(ev) => setExtraInfo(ev.target.value)}
+            />
+            {preInput("Check in/out time", "add check in and check out time")}
             <div className="grid gap-2 sm:grid-cols-3">
               <div className="mt-2 -mb-1">
                 <h3>Check in time</h3>
-                <input type="text" placeholder="16:00" />
+                <input
+                  type="text"
+                  value={checkIn}
+                  onChange={(ev) => setCheckIn(ev.target.value)}
+                  placeholder="16:00"
+                />
               </div>
               <div className="mt-2 -mb-1">
                 <h3>Check out time</h3>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={checkOut}
+                  onChange={(ev) => setCheckOut(ev.target.value)}
+                  placeholder="17:00"
+                />
               </div>
               <div className="mt-2 -mb-1">
                 <h3>Max guests</h3>
-                <input type="text" />
+                <input
+                  type="number"
+                  value={maxGuest}
+                  onChange={(ev) => setMaxGuest(ev.target.value)}
+                  placeholder="0"
+                />
               </div>
             </div>
             <button className="primary my-4">Save</button>
