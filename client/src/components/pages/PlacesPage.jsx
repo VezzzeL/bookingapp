@@ -39,6 +39,7 @@ export const PlacesPage = () => {
     });
     setPhotoLink("");
   }
+  function uploadPhoto() {}
   return (
     <div>
       {action !== "new" && (
@@ -108,7 +109,8 @@ export const PlacesPage = () => {
                     />
                   </div>
                 ))}
-              <button className="flex gap-1 justify-center border bg-transparent rounded-2xl p-8 text-2xl text-gray-600">
+              <label className="cursor-pointer flex gap-1 items-center justify-center border bg-transparent rounded-2xl p-8 text-2xl text-gray-600">
+                <input type="file" className="hidden" onChange={uploadPhoto} />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -124,7 +126,7 @@ export const PlacesPage = () => {
                   />
                 </svg>
                 Upload
-              </button>
+              </label>
             </div>
             {preInput("Description", "Describe")}
             <textarea
