@@ -32,7 +32,7 @@ export const PlacesPage = () => {
   }
   async function addNewPlace(ev) {
     ev.preventDefault();
-    axios.post("/places", {
+    await axios.post("/places", {
       title,
       address,
       addedPhotos,
