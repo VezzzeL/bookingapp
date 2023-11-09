@@ -3,7 +3,7 @@ import { PhotosUploader } from "./PhotosUploader";
 import { Perks } from "./Perks";
 import axios from "axios";
 import { AccountNav } from "./AccountNav";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const PlacesForm = () => {
   const [title, setTitle] = useState("");
@@ -16,7 +16,7 @@ export const PlacesForm = () => {
   const [checkOut, setCheckOut] = useState("");
   const [maxGuest, setMaxGuest] = useState(1);
   const [redirect, setRedirect] = useState(false);
-
+  const navigate = useNavigate();
   function inputHeader(text) {
     return <h2 className="text-2xl mt-4">{text}</h2>;
   }
@@ -47,7 +47,7 @@ export const PlacesForm = () => {
     setRedirect(true);
   }
   if (redirect) {
-    return <Navigate to={"account/places"} />;
+    navigate("/account/places");
   }
   return (
     <div>
