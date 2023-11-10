@@ -22,7 +22,18 @@ export const PlacesForm = () => {
     if (!id) {
       return;
     }
-    axios.get("/places/" + id);
+    axios.get("/places/" + id).then((response) => {
+      const { data } = response;
+      setTitle(data.title);
+      setAddress(data.address);
+      setAddedPhotos(data.photos);
+      setDescription(data.description);
+      setPerks(data.perks);
+      setExtraInfo(data.extraInfo);
+      setCheckIn(data.checkIn);
+      setCheckOut(data.checkOut);
+      setMaxGuest(data.setMaxGuest);
+    });
   }, [id]);
   function inputHeader(text) {
     return <h2 className="text-2xl mt-4">{text}</h2>;
@@ -38,9 +49,9 @@ export const PlacesForm = () => {
       </>
     );
   }
-  async function addNewPlace(ev) {
+  async function savePlace(ev) {
     ev.preventDefault();
-    await axios.post("/places", {
+    const placeData = {
       title,
       address,
       addedPhotos,
@@ -50,7 +61,15 @@ export const PlacesForm = () => {
       checkIn,
       checkOut,
       maxGuest,
-    });
+    };
+    if (id) {
+      await axios.put("/places", {
+        id,
+        ...placeData,
+      });
+    } else {
+      await axios.post("/places", placeData);
+    }
     setRedirect(true);
   }
   if (redirect) {
@@ -59,7 +78,7 @@ export const PlacesForm = () => {
   return (
     <div>
       <AccountNav />
-      <form onSubmit={addNewPlace}>
+      <form onSubmit={savePlace}>
         {preInput("Title", "Title for service")}
         <input
           type="text"
