@@ -157,6 +157,7 @@ app.get("/places/:id", async (req, res) => {
   res.json(await Place.findById(id));
 });
 
+
 app.put("/places", async (req, res) => {
   const { token } = req.cookies;
   const {
