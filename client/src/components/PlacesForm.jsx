@@ -17,6 +17,7 @@ export const PlacesForm = () => {
   const [checkOut, setCheckOut] = useState("");
   const [maxGuest, setMaxGuest] = useState(1);
   const [redirect, setRedirect] = useState(false);
+  const [price, setPrice] = useState(150);
   const navigate = useNavigate();
   useEffect(() => {
     if (!id) {
@@ -33,6 +34,7 @@ export const PlacesForm = () => {
       setCheckIn(data.checkIn);
       setCheckOut(data.checkOut);
       setMaxGuest(data.setMaxGuest);
+      setPrice(data.price);
     });
   }, [id]);
   function inputHeader(text) {
@@ -61,6 +63,7 @@ export const PlacesForm = () => {
       checkIn,
       checkOut,
       maxGuest,
+      price,
     };
     if (id) {
       await axios.put("/places", {
@@ -110,7 +113,7 @@ export const PlacesForm = () => {
           onChange={(ev) => setExtraInfo(ev.target.value)}
         />
         {preInput("Check in/out time", "add check in and check out time")}
-        <div className="grid gap-2 sm:grid-cols-3">
+        <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
           <div className="mt-2 -mb-1">
             <h3>Check in time</h3>
             <input
@@ -135,6 +138,15 @@ export const PlacesForm = () => {
               type="number"
               value={maxGuest}
               onChange={(ev) => setMaxGuest(ev.target.value)}
+              placeholder="0"
+            />
+          </div>
+          <div className="mt-2 -mb-1">
+            <h3>Price</h3>
+            <input
+              type="number"
+              value={price}
+              onChange={(ev) => setPrice(ev.target.value)}
               placeholder="0"
             />
           </div>
