@@ -6,8 +6,7 @@ export const IndexPage = () => {
   const [places, setPlaces] = useState([]);
   useEffect(() => {
     axios.get("/places").then((response) => {
-      //TODO: remove later after adding more places
-      setPlaces([...response.data, ...response.data]);
+      setPlaces([...response.data]);
     });
   }, []);
   return (
