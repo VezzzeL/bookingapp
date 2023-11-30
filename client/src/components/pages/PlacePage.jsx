@@ -22,7 +22,7 @@ export const PlacePage = () => {
     return (
       <div className="absolute inset-0 bg-black text-white">
         <div className="bg-black p-8 grid gap-4">
-          <h2 className="text-3xl">Photos of {place.title}</h2>
+          <h2 className="text-3xl mr-48">Photos of {place.title}</h2>
           <button
             onClick={() => setShowAllPhotos(false)}
             className="fixed right-12 top-8 flex gap-1 py-2 px-4 rounded-2xl shadow-gray-500"
@@ -93,6 +93,7 @@ export const PlacePage = () => {
             {place.photos?.[0] && (
               <div>
                 <img
+                  onClick={() => setShowAllPhotos(true)}
                   className="aspect-square object-cover min-w-full min-h-full"
                   src={"http://localhost:4000/uploads/" + place.photos[0]}
                   alt=""
@@ -103,6 +104,7 @@ export const PlacePage = () => {
           <div className="grid">
             {place.photos?.[1] && (
               <img
+                onClick={() => setShowAllPhotos(true)}
                 className="aspect-square object-cover min-w-full min-h-full"
                 src={"http://localhost:4000/uploads/" + place.photos[1]}
                 alt=""
@@ -111,6 +113,7 @@ export const PlacePage = () => {
             <div className="overflow-hidden">
               {place.photos?.[2] && (
                 <img
+                  onClick={() => setShowAllPhotos(true)}
                   className="aspect-square object-cover min-w-full min-h-full relative top-2"
                   src={"http://localhost:4000/uploads/" + place.photos[2]}
                   alt=""
