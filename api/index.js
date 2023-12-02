@@ -10,6 +10,8 @@ const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
 const multer = require("multer");
 const fs = require("fs");
+const { resolve } = require("path");
+const { rejects } = require("assert");
 
 require("dotenv").config();
 const app = express();
@@ -18,11 +20,8 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = "6539844e526e3bc20e0e0e2f";
 
 app.use(express.json());
-
 app.use(cookieParser());
-
 app.use("/uploads", express.static(__dirname + "/uploads"));
-
 app.use(
   cors({
     credentials: true,
@@ -31,6 +30,15 @@ app.use(
 );
 
 mongoose.connect(process.env.MONGO_URL);
+
+function getUserDataFromReq(req) {
+  return new Promise((resolve, rejects) => {
+    jwt.verify(req.cookies.token, jwtSecret, {}, async (err, userData) => {
+      if (err) throw err;
+      resolve(userData);
+    });
+  });
+}
 
 app.get("/test", (req, res) => {
   res.json("test ok");
@@ -201,7 +209,8 @@ app.get("/places", async (req, res) => {
   res.json(await Place.find());
 });
 
-app.post("/bookings", (req, res) => {
+app.post("/bookings", async (req, res) => {
+  const userData = await getUserDataFromReq(req);
   const { place, checkIn, checkOut, numberOfGuests, fullname, phone, price } =
     req.body;
   Booking.create({
@@ -212,6 +221,7 @@ app.post("/bookings", (req, res) => {
     fullname,
     phone,
     price,
+    user: userData.id,
   })
     .then((doc) => {
       res.json(doc);
@@ -219,6 +229,11 @@ app.post("/bookings", (req, res) => {
     .catch((err) => {
       throw err;
     });
+});
+
+app.get("/bookings", async (req, res) => {
+  const userData = await getUserDataFromReq(req);
+  res.json(await Booking.find({ user: userData.id }).populate("place"));
 });
 
 app.listen(4000);
