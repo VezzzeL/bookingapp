@@ -22,7 +22,7 @@ export const Header = () => {
             3 0 11-6 0 3 3 0 016 0z"
           />
         </svg>
-        <span className="font-bold text-xl">brows_lkv</span>
+        <span className="font-bold text-xl">bookingapp</span>
       </Link>
       <div className="flex gap-2 border border-gray-300 rounded-full py-2 px-4 shadow-md shadow-gray-300">
         <div>Anywhere</div>
